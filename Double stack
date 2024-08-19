@@ -1,0 +1,197 @@
+#include <stdio.h>
+#include <stdlib.h> // For exit()
+
+#define N 8
+
+void push1(int [], int *, int, int *);
+void push2(int [], int *, int, int *);
+int pop1(int [], int *);
+int pop2(int [], int *);
+void display1(int [], int);
+void display2(int [], int);
+int peek1(int [], int);
+int peek2(int [], int);
+void modify1(int [], int, int);
+void modify2(int [], int, int, int *);
+
+int main() {
+    int s[N];
+    int top1 = -1;
+    int top2 = N;
+    int data, choice, pos;
+
+    while (1) {
+        printf("\nMenu:\n");
+        printf("1. Push to Stack 1\n");
+        printf("2. Push to Stack 2\n");
+        printf("3. Pop from Stack 1\n");
+        printf("4. Pop from Stack 2\n");
+        printf("5. Display Stack 1\n");
+        printf("6. Display Stack 2\n");
+        printf("7. Peek Stack 1\n");
+        printf("8. Peek Stack 2\n");
+        printf("9. Modify Stack 1\n");
+        printf("10. Modify Stack 2\n");
+        printf("11. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter a value to push to Stack 1: ");
+                scanf("%d", &data);
+                push1(s, &top1, data, &top2);
+                break;
+            case 2:
+                printf("Enter a value to push to Stack 2: ");
+                scanf("%d", &data);
+                push2(s, &top2, data, &top1);
+                break;
+            case 3:
+                data = pop1(s, &top1);
+                if (data != -1) {
+                    printf("Popped %d from Stack 1\n", data);
+                }
+                break;
+            case 4:
+                data = pop2(s, &top2);
+                if (data != -1) {
+                    printf("Popped %d from Stack 2\n", data);
+                }
+                break;
+            case 5:
+                display1(s, top1);
+                break;
+            case 6:
+                display2(s, top2);
+                break;
+            case 7:
+                data = peek1(s, top1);
+                if (data != -1) {
+                    printf("Peeked %d from Stack 1\n", data);
+                }
+                break;
+            case 8:
+                data = peek2(s, top2);
+                if (data != -1) {
+                    printf("Peeked %d from Stack 2\n", data);
+                }
+                break;
+            case 9:
+                printf("Enter the position to modify in Stack 1 (0 to %d): ", top1);
+                scanf("%d", &pos);
+                if (pos >= 0 && pos <= top1) {
+                    printf("Enter the new value: ");
+                    scanf("%d", &data);
+                    modify1(s, pos, data);
+                } else {
+                    printf("Invalid position\n");
+                }
+                break;
+            case 10:
+                printf("Enter the position to modify in Stack 2 (0 to %d): ", N - top2 - 1);
+                scanf("%d", &pos);
+                if (pos >= 0 && pos <= N - top2 - 1) {
+                    printf("Enter the new value: ");
+                    scanf("%d", &data);
+                    modify2(s, pos, data, &top2);
+                } else {
+                    printf("Invalid position\n");
+                }
+                break;
+            case 11:
+                exit(0);
+            default:
+                printf("Invalid choice\n");
+                break;
+        }
+    }
+
+    return 0;
+}
+
+void push1(int s[], int *top1, int val, int *top2) {
+    if (*top1 < *top2 - 1) {
+        s[++(*top1)] = val;
+    } else {
+        printf("Stack 1 Overflow\n");
+    }
+}
+
+void push2(int s[], int *top2, int val, int *top1) {
+    if (*top1 < *top2 - 1) {
+        s[--(*top2)] = val;
+    } else {
+        printf("Stack 2 Overflow\n");
+    }
+}
+
+int pop1(int s[], int *top1) {
+    if (*top1 >= 0) {
+        return s[(*top1)--];
+    } else {
+        printf("Stack 1 Underflow\n");
+        return -1;
+    }
+}
+
+int pop2(int s[], int *top2) {
+    if (*top2 < N) {
+        return s[(*top2)++];
+    } else {
+        printf("Stack 2 Underflow\n");
+        return -1;
+    }
+}
+
+void display1(int s[], int top1) {
+    if (top1 >= 0) {
+        printf("Stack 1 elements:\n");
+        for (int i = top1; i >= 0; i--) {
+            printf("%d ", s[i]);
+        }
+        printf("\n");
+    } else {
+        printf("Stack 1 is empty\n");
+    }
+}
+
+void display2(int s[], int top2) {
+    if (top2 < N) {
+        printf("Stack 2 elements:\n");
+        for (int i = top2; i < N; i++) {
+            printf("%d ", s[i]);
+        }
+        printf("\n");
+    } else {
+        printf("Stack 2 is empty\n");
+    }
+}
+
+int peek1(int s[], int top1) {
+    if (top1 >= 0) {
+        return s[top1];
+    } else {
+        printf("Stack 1 is empty\n");
+        return -1;
+    }
+}
+
+int peek2(int s[], int top2) {
+    if (top2 < N) {
+        return s[top2];
+    } else {
+        printf("Stack 2 is empty\n");
+        return -1;
+    }
+}
+
+void modify1(int s[], int pos, int val) {
+    s[pos] = val;
+    printf("Value at position %d in Stack 1 modified to %d\n", pos, val);
+}
+
+void modify2(int s[], int pos, int val, int *top2) {
+    s[*top2 + pos] = val;
+    printf("Value at position %d in Stack 2 modified to %d\n", pos, val);
+}
