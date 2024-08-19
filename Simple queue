@@ -1,0 +1,133 @@
+#include <stdio.h>
+#include <stdlib.h> // Added for the exit() function
+#define N 4
+
+void qinsert(int [], int *, int *, int, int); 
+int qdelete(int [], int *, int *);
+void display(int [], int, int);
+void modify(int [], int, int, int);
+
+int main()
+{
+    int q[N];
+    int front = -1, rear = -1; 
+    int data, choice, position;
+
+    while (1)
+    {
+        printf("1. Insert\n");
+        printf("2. Delete\n");
+        printf("3. Display\n");
+        printf("4. Modify\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice)
+        {
+            case 1: 
+                printf("Enter a value to insert: "); 
+                scanf("%d", &data);
+                qinsert(q, &front, &rear, N, data);
+                break;
+
+            case 2: 
+                data = qdelete(q, &front, &rear);
+                if (data != -1)
+                    printf("Deleted %d\n", data);
+                break;
+
+            case 3: 
+                display(q, front, rear); 
+                break;
+
+            case 4:
+                printf("Enter the position to modify (0-based index): ");
+                scanf("%d", &position);
+                printf("Enter the new value: ");
+                scanf("%d", &data);
+                modify(q, front, rear, position, data);
+                break;
+
+            default: 
+                exit(0);
+        }
+    }
+}
+
+void qinsert(int q[], int *front, int *rear, int n, int val)
+{
+    if (*rear == n - 1)
+    {
+        printf("Overflow\n");
+        return;
+    }
+
+    if (*front == -1)
+        *front = 0;
+
+    *rear = *rear + 1;
+    q[*rear] = val;
+}
+
+int qdelete(int q[], int *front, int *rear)
+{
+    int data;
+
+    if (*front == -1) 
+    {
+        printf("Underflow\n"); 
+        return -1;
+    }
+
+    data = q[*front];
+
+    if (*front == *rear)
+    {
+        // Queue is empty after removal
+        *front = *rear = -1;
+    }
+    else
+    {
+        *front = *front + 1;
+    }
+
+    return data;
+}
+
+void display(int q[], int front, int rear)
+{
+    if (front == -1)
+    {
+        printf("\n\t\tQueue Empty\n");
+    }
+    else 
+    {
+        printf("\n\t\tFront(=%d) ->", front);
+        for (int i = front; i <= rear; i++)
+        { 
+            printf(" %d", q[i]);
+        }
+        printf(" <- Rear(=%d)\n", rear);
+    }
+}
+
+void modify(int q[], int front, int rear, int position, int newValue)
+{
+    if (front == -1)
+    {
+        printf("Queue is empty, cannot modify\n");
+        return;
+    }
+
+    int index = front + position;
+
+    if (index > rear || index < front)
+    {
+        printf("Invalid position\n");
+        return;
+    }
+
+    q[index] = newValue;
+    printf("Value at position %d modified to %d\n", position, newValue);
+}
