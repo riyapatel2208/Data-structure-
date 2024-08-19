@@ -1,0 +1,112 @@
+#include <stdio.h>
+#include <stdlib.h> // For exit()
+
+#define N 4
+
+void push(int [], int *, int, int);
+int pop(int [], int *);
+void display(int [], int);
+int peek(int [], int);
+void modify(int [], int, int);
+
+int main() {
+    int s[N];
+    int top = -1;
+    int data, choice, pos;
+
+    while (1) {
+        printf("1. Push\n");
+        printf("2. Pop\n");
+        printf("3. Display\n");
+        printf("4. Peek\n");
+        printf("5. Modify\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter a value to push: ");
+                scanf("%d", &data);
+                push(s, &top, N, data);
+                break;
+            case 2:
+                data = pop(s, &top);
+                if (data != -1) {
+                    printf("Popped %d\n", data);
+                }
+                break;
+            case 3:
+                display(s, top);
+                break;
+            case 4:
+                data = peek(s, top);
+                if (data != -1) {
+                    printf("Peeked %d\n", data);
+                }
+                break;
+            case 5:
+                printf("Enter the position to modify (0 to %d): ", top);
+                scanf("%d", &pos);
+                if (pos >= 0 && pos <= top) {
+                    printf("Enter the new value: ");
+                    scanf("%d", &data);
+                    modify(s, pos, data);
+                } else {
+                    printf("Invalid position\n");
+                }
+                break;
+            case 6:
+                exit(0);
+            default:
+                printf("Invalid choice\n");
+                break;
+        }
+    }
+}
+
+void push(int s[], int *top, int n, int val) {
+    if (*top >= n - 1) {
+        printf("Stack overflow\n");
+        return;
+    }
+    *top = *top + 1;
+    s[*top] = val;
+}
+
+int pop(int s[], int *top) {
+    int val;
+    if (*top <= -1) {
+        printf("Stack underflow\n");
+        return -1;
+    }
+    val = s[*top];
+    *top = *top - 1;
+    return val;
+}
+
+void display(int s[], int top) {
+    if (top <= -1) {
+        printf("Stack Empty\n");
+    } else {
+        printf("\t\t\tTop ->\n");
+        for (int i = top; i >= 0; i--) {
+            printf("%d\n", s[i]);
+            printf("\t\t\t\t");
+        }
+        printf("\n");
+    }
+}
+
+int peek(int s[], int top) {
+    if (top <= -1) {
+        printf("Stack Empty\n");
+        return -1;
+    }
+    return s[top];
+}
+
+void modify(int s[], int pos, int val) {
+    s[pos] = val;
+    printf("Value at position %d modified to %d\n", pos, val);
+}
